@@ -1,0 +1,798 @@
+<!--
+Source guide (not written by the repo owner): "VLESS + Reality - Setup & Background Guide"
+Saved verbatim from https://inspiring-sfogliatella-d1daca.netlify.app/ on 2026-10-22.
+Original author unknown (no attribution on the page).
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VLESS + Reality — Setup & Background Guide</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        ::selection {
+            background: #c7d2fe;
+            color: #1e1b4b;
+        }
+
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 text-slate-800 font-sans leading-relaxed">
+
+    <main class="max-w-5xl mx-auto px-5 py-8 md:px-10 md:py-14">
+
+        <!-- WARNING / NOTE -->
+        <div class="mb-8 rounded-2xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
+            <div class="flex gap-4">
+                <div class="text-2xl">⚠️</div>
+
+                <div>
+                    <h2 class="font-bold text-amber-900 text-lg mb-1">
+                        Ek chhoti si request
+                    </h2>
+
+                    <p class="text-amber-900/80">
+                        Agar setup karte waqt koi dikkat aaye, toh iss guide/PDF ko
+                        aur jo exact error aa raha hai usko ChatGPT, Claude, Gemini
+                        ya kisi bhi AI ko de dena. Mujhe DM matt karna 😭
+                    </p>
+
+                    <p class="text-amber-900/70 text-sm mt-2">
+                        Mera bhi setup pehli baar mein kisi tarah "jaise-taise"
+                        chala tha.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- HERO -->
+        <section class="bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900
+                        text-white rounded-3xl p-8 md:p-12 shadow-2xl mb-10">
+
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full
+                        bg-white/10 border border-white/10 text-indigo-200
+                        text-sm font-medium mb-5">
+                VLESS • Xray • Reality
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight leading-tight">
+                VLESS + Reality
+            </h1>
+
+            <p class="text-xl md:text-2xl text-slate-300 mt-4 max-w-3xl">
+                Why it exists, where it came from, and how the whole setup fits together.
+            </p>
+
+            <div class="mt-8 grid md:grid-cols-3 gap-4">
+
+                <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                    <div class="text-indigo-300 font-bold mb-1">VLESS</div>
+                    <div class="text-sm text-slate-300">
+                        Lightweight proxy protocol derived from the evolution of VMess.
+                    </div>
+                </div>
+
+                <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                    <div class="text-indigo-300 font-bold mb-1">Reality</div>
+                    <div class="text-sm text-slate-300">
+                        A TLS-based anti-censorship mechanism designed to resist
+                        active probing and protocol identification.
+                    </div>
+                </div>
+
+                <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                    <div class="text-indigo-300 font-bold mb-1">Xray</div>
+                    <div class="text-sm text-slate-300">
+                        The software core that can run VLESS and Reality together.
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- TOC -->
+        <nav class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-10">
+            <h2 class="font-bold text-lg text-slate-900 mb-4">📌 What's inside?</h2>
+
+            <div class="grid md:grid-cols-2 gap-2 text-indigo-700">
+                <a href="#history" class="hover:underline">01 — How we got here</a>
+                <a href="#vmess" class="hover:underline">02 — VMess → VLESS</a>
+                <a href="#reality" class="hover:underline">03 — Why Reality was created</a>
+                <a href="#architecture" class="hover:underline">04 — How the pieces fit</a>
+                <a href="#prep" class="hover:underline">05 — VPS preparation</a>
+                <a href="#panel" class="hover:underline">06 — 3x-ui installation</a>
+                <a href="#config" class="hover:underline">07 — Reality configuration</a>
+                <a href="#troubleshooting" class="hover:underline">08 — Troubleshooting</a>
+            </div>
+        </nav>
+
+
+        <!-- HISTORY -->
+        <section id="history" class="bg-white rounded-2xl border border-slate-200
+                                    p-7 md:p-9 shadow-sm mb-8">
+
+            <div class="flex items-center gap-3 mb-5">
+                <span class="bg-indigo-600 text-white w-9 h-9 rounded-full
+                             flex items-center justify-center font-bold">1</span>
+
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900">
+                    How did we get here?
+                </h2>
+            </div>
+
+            <p class="text-lg text-slate-600 mb-5">
+                To understand why people use VLESS + Reality today, it helps to
+                understand what came before it.
+            </p>
+
+            <div class="relative border-l-2 border-indigo-200 ml-4 space-y-8 pl-7">
+
+                <div>
+                    <div class="text-sm font-bold text-indigo-600 uppercase tracking-wide">
+                        Earlier generation
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mt-1">
+                        VMess
+                    </h3>
+
+                    <p class="text-slate-600 mt-2">
+                        VMess was one of the protocols associated with the V2Ray
+                        ecosystem. It provided authentication and traffic transport,
+                        but over time its protocol characteristics became easier
+                        for sophisticated censorship systems to study and identify.
+                    </p>
+                </div>
+
+
+                <div>
+                    <div class="text-sm font-bold text-indigo-600 uppercase tracking-wide">
+                        Next step
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mt-1">
+                        VLESS
+                    </h3>
+
+                    <p class="text-slate-600 mt-2">
+                        VLESS was designed as a simpler, lightweight and stateless
+                        alternative. Instead of trying to make the protocol itself
+                        responsible for everything, VLESS focuses on the proxy
+                        transport while the surrounding transport/security layers
+                        handle other requirements.
+                    </p>
+                </div>
+
+
+                <div>
+                    <div class="text-sm font-bold text-indigo-600 uppercase tracking-wide">
+                        Modern anti-censorship approach
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mt-1">
+                        Reality
+                    </h3>
+
+                    <p class="text-slate-600 mt-2">
+                        Reality takes a different approach to the censorship problem:
+                        rather than inventing an obviously unique TLS-like appearance,
+                        it works with real TLS infrastructure and legitimate-looking
+                        destinations to make active probing and simple fingerprinting
+                        significantly harder.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- VMESS VS VLESS -->
+        <section id="vmess" class="bg-white rounded-2xl border border-slate-200
+                                  p-7 md:p-9 shadow-sm mb-8">
+
+            <div class="flex items-center gap-3 mb-5">
+                <span class="bg-indigo-600 text-white w-9 h-9 rounded-full
+                             flex items-center justify-center font-bold">2</span>
+
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900">
+                    VMess → VLESS: what actually changed?
+                </h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-200">
+                            <th class="py-3 pr-4 text-slate-900"></th>
+                            <th class="py-3 px-4 text-slate-900">VMess</th>
+                            <th class="py-3 pl-4 text-slate-900">VLESS</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="text-slate-600">
+
+                        <tr class="border-b border-slate-100">
+                            <td class="py-4 font-semibold text-slate-800">Design</td>
+                            <td class="py-4 px-4">More protocol logic built in</td>
+                            <td class="py-4 pl-4">Simpler / stateless design</td>
+                        </tr>
+
+                        <tr class="border-b border-slate-100">
+                            <td class="py-4 font-semibold text-slate-800">Encryption</td>
+                            <td class="py-4 px-4">Historically included protocol-level encryption</td>
+                            <td class="py-4 pl-4">Relies heavily on the transport/security layer</td>
+                        </tr>
+
+                        <tr class="border-b border-slate-100">
+                            <td class="py-4 font-semibold text-slate-800">Overhead</td>
+                            <td class="py-4 px-4">More protocol overhead</td>
+                            <td class="py-4 pl-4">Designed to be lightweight</td>
+                        </tr>
+
+                        <tr>
+                            <td class="py-4 font-semibold text-slate-800">Modern usage</td>
+                            <td class="py-4 px-4">Older V2Ray ecosystem</td>
+                            <td class="py-4 pl-4">Commonly paired with modern transports such as Reality</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-6 bg-indigo-50 border border-indigo-100 rounded-xl p-5">
+                <p class="text-indigo-950">
+                    <strong>The important idea:</strong>
+                    VLESS by itself is not some magical "undetectable VPN."
+                    Its usefulness comes from combining a lightweight proxy protocol
+                    with an appropriate transport and security layer.
+                </p>
+            </div>
+        </section>
+
+
+        <!-- REALITY -->
+        <section id="reality" class="bg-white rounded-2xl border border-slate-200
+                                    p-7 md:p-9 shadow-sm mb-8">
+
+            <div class="flex items-center gap-3 mb-5">
+                <span class="bg-indigo-600 text-white w-9 h-9 rounded-full
+                             flex items-center justify-center font-bold">3</span>
+
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900">
+                    Why was Reality created?
+                </h2>
+            </div>
+
+            <p class="text-lg text-slate-600 mb-6">
+                Internet censorship systems don't necessarily need to decrypt your
+                traffic to interfere with it. They can inspect metadata, TLS
+                characteristics, traffic patterns and even actively probe servers
+                to determine what service is actually running.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-5">
+
+                <div class="rounded-xl bg-red-50 border border-red-100 p-5">
+                    <h3 class="font-bold text-red-900 mb-2">
+                        The problem
+                    </h3>
+
+                    <p class="text-red-900/75">
+                        If a proxy server has a recognizable fingerprint, a censor
+                        can potentially identify or block it without needing to
+                        read the encrypted application data.
+                    </p>
+                </div>
+
+                <div class="rounded-xl bg-emerald-50 border border-emerald-100 p-5">
+                    <h3 class="font-bold text-emerald-900 mb-2">
+                        The idea behind Reality
+                    </h3>
+
+                    <p class="text-emerald-900/75">
+                        Use real TLS behavior and legitimate-looking destinations
+                        so that simply connecting to the server does not immediately
+                        reveal "this is a proxy server."
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="mt-6 bg-slate-900 text-slate-200 rounded-xl p-6">
+                <div class="font-bold text-white mb-2">
+                    🇨🇳 Why is China often mentioned?
+                </div>
+
+                <p>
+                    Systems such as China's Great Firewall have historically driven
+                    the development of increasingly sophisticated censorship-
+                    resistant proxy techniques. The broader goal of projects in
+                    this space is to make traffic harder to classify, block, or
+                    actively probe.
+                </p>
+
+                <p class="text-slate-400 text-sm mt-3">
+                    Reality is not a guarantee of invisibility or censorship
+                    bypass. Networks can still block IP addresses, destinations,
+                    ports, or traffic patterns.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- ARCHITECTURE -->
+        <section id="architecture" class="bg-white rounded-2xl border border-slate-200
+                                          p-7 md:p-9 shadow-sm mb-8">
+
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-600 text-white w-9 h-9 rounded-full
+                             flex items-center justify-center font-bold">4</span>
+
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900">
+                    How does the whole thing fit together?
+                </h2>
+            </div>
+
+            <div class="bg-slate-950 rounded-2xl p-6 md:p-8 text-center overflow-x-auto">
+
+                <div class="flex items-center justify-center min-w-[650px] gap-3">
+
+                    <div class="bg-white/10 border border-white/10 rounded-xl p-4 w-36">
+                        <div class="text-2xl mb-2">📱</div>
+                        <div class="text-white font-bold">Client</div>
+                        <div class="text-slate-400 text-xs mt-1">
+                            v2rayNG / V2Box
+                        </div>
+                    </div>
+
+                    <div class="text-indigo-300 text-2xl">→</div>
+
+                    <div class="bg-indigo-500/20 border border-indigo-400/20 rounded-xl p-4 w-36">
+                        <div class="text-2xl mb-2">🔐</div>
+                        <div class="text-white font-bold">VLESS</div>
+                        <div class="text-slate-400 text-xs mt-1">
+                            Proxy protocol
+                        </div>
+                    </div>
+
+                    <div class="text-indigo-300 text-2xl">→</div>
+
+                    <div class="bg-indigo-500/20 border border-indigo-400/20 rounded-xl p-4 w-36">
+                        <div class="text-2xl mb-2">🛡️</div>
+                        <div class="text-white font-bold">Reality</div>
+                        <div class="text-slate-400 text-xs mt-1">
+                            TLS-based layer
+                        </div>
+                    </div>
+
+                    <div class="text-indigo-300 text-2xl">→</div>
+
+                    <div class="bg-white/10 border border-white/10 rounded-xl p-4 w-36">
+                        <div class="text-2xl mb-2">☁️</div>
+                        <div class="text-white font-bold">Internet</div>
+                        <div class="text-slate-400 text-xs mt-1">
+                            Destination
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <p class="text-slate-600 mt-5">
+                Think of it as separate layers rather than one magical protocol:
+                <strong>VLESS handles the proxy side, Reality handles the
+                TLS/camouflage side, and Xray provides the software implementation.</strong>
+            </p>
+
+        </section>
+
+
+        <!-- VPS PREP -->
+        <section id="prep" class="bg-white rounded-2xl border border-slate-200
+                                 p-7 md:p-9 shadow-sm mb-8">
+
+            <div class="flex items-center gap-3 mb-5">
+                <span class="bg-indigo-600 text-white w-9 h-9 rounded-full
+                             flex items-center justify-center font-bold">5</span>
+
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900">
+                    VPS Preparation
+                </h2>
+            </div>
+
+            <p class="text-slate-600 text-lg mb-5">
+                This example assumes a Linux VPS. Oracle Cloud is commonly used
+                for personal experiments, but the same general architecture can
+                be deployed on other VPS providers.
+            </p>
+
+            <div class="space-y-4">
+
+                <div class="flex gap-4 bg-slate-50 border border-slate-100 rounded-xl p-5">
+                    <div class="font-black text-indigo-600 text-xl">01</div>
+
+                    <div>
+                        <h3 class="font-bold text-slate-900">
+                            Cloud firewall
+                        </h3>
+
+                        <p class="text-slate-600">
+                            Allow inbound TCP traffic on the port you intend to
+                            use. Cloud providers may have their own security
+                            groups, security lists, or firewall rules.
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="flex gap-4 bg-slate-50 border border-slate-100 rounded-xl p-5">
+                    <div class="font-black text-indigo-600 text-xl">02</div>
+
+                    <div>
+                        <h3 class="font-bold text-slate-900">
+                            Operating-system firewall
+                        </h3>
+
+                        <p class="text-slate-600">
+                            Your Linux distribution can independently block the
+                            same port. Check firewalld, ufw, iptables/nftables,
+                            depending on the distribution.
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="flex gap-4 bg-slate-50 border border-slate-100 rounded-xl p-5">
+                    <div class="font-black text-indigo-600 text-xl">03</div>
+
+                    <div>
+                        <h3 class="font-bold text-slate-900">
+                            Test connectivity
+                        </h3>
+
+                        <p class="text-slate-600">
+                            Before blaming Xray or Reality, verify that the VPS
+                            itself is reachable on the selected port.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- 3X-UI -->
+        <section id="panel" class="bg-white rounded-2xl border border-slate-200
+                                   p-7 md:p-9 shadow-sm mb-8">
+
+            <div class="flex items-center gap-3 mb-5">
+                <span class="bg-indigo-600 text-white w-9 h-9 rounded-full
+                             flex items-center justify-center font-bold">6</span>
+
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900">
+                    Installing 3x-ui
+                </h2>
+            </div>
+
+            <p class="text-lg text-slate-600 mb-5">
+                You don't have to manually maintain every Xray JSON configuration
+                from the terminal. A panel such as 3x-ui can provide a graphical
+                interface for creating and managing inbounds and clients.
+            </p>
+
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5">
+                <h3 class="font-bold text-indigo-950 mb-2">
+                    What the panel actually does
+                </h3>
+
+                <ul class="list-disc pl-5 space-y-2 text-indigo-950/80">
+                    <li>Manages Xray configurations.</li>
+                    <li>Creates and edits inbounds.</li>
+                    <li>Manages client credentials.</li>
+                    <li>Helps generate client connection links.</li>
+                    <li>Provides basic traffic and connection management.</li>
+                </ul>
+            </div>
+
+            <p class="text-slate-500 text-sm mt-5">
+                Always verify installation commands against the project's current
+                official documentation rather than blindly copying commands from
+                an old guide.
+            </p>
+
+        </section>
+
+
+        <!-- CONFIGURATION -->
+        <section id="config" class="bg-white rounded-2xl border border-slate-200
+                                    p-7 md:p-9 shadow-sm mb-8">
+
+            <div class="flex items-center gap-3 mb-5">
+                <span class="bg-indigo-600 text-white w-9 h-9 rounded-full
+                             flex items-center justify-center font-bold">7</span>
+
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900">
+                    Configuring a VLESS + Reality inbound
+                </h2>
+            </div>
+
+            <div class="space-y-5">
+
+                <div>
+                    <h3 class="font-bold text-slate-900 mb-1">
+                        Protocol
+                    </h3>
+
+                    <p class="text-slate-600">
+                        Select <code class="bg-slate-100 px-2 py-1 rounded">
+                        VLESS
+                        </code>.
+                    </p>
+                </div>
+
+
+                <div>
+                    <h3 class="font-bold text-slate-900 mb-1">
+                        Port
+                    </h3>
+
+                    <p class="text-slate-600">
+                        Choose an available TCP port and make sure the cloud
+                        firewall and OS firewall allow it.
+                    </p>
+                </div>
+
+
+                <div>
+                    <h3 class="font-bold text-slate-900 mb-1">
+                        Security
+                    </h3>
+
+                    <p class="text-slate-600">
+                        Select <strong>Reality</strong> as the security/transport
+                        mechanism where supported by your Xray/3x-ui version.
+                    </p>
+                </div>
+
+
+                <div>
+                    <h3 class="font-bold text-slate-900 mb-1">
+                        Client identity
+                    </h3>
+
+                    <p class="text-slate-600">
+                        Generate a unique UUID for the client. Keep this private;
+                        anyone who obtains a usable client configuration may be
+                        able to use your server.
+                    </p>
+                </div>
+
+
+                <div>
+                    <h3 class="font-bold text-slate-900 mb-1">
+                        Reality keys
+                    </h3>
+
+                    <p class="text-slate-600">
+                        Generate a fresh Reality key pair using the interface or
+                        supported Xray tooling.
+                    </p>
+                </div>
+
+
+                <div>
+                    <h3 class="font-bold text-slate-900 mb-1">
+                        Flow
+                    </h3>
+
+                    <p class="text-slate-600">
+                        Where supported by your chosen configuration, modern
+                        clients may use
+                        <code class="bg-slate-100 px-2 py-1 rounded">
+                        xtls-rprx-vision
+                        </code>.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="mt-7 bg-slate-900 rounded-xl p-6 text-slate-300">
+                <h3 class="text-white font-bold mb-2">
+                    ⚠️ Don't blindly copy someone else's configuration
+                </h3>
+
+                <p>
+                    UUIDs, private keys and other client/server credentials should
+                    be unique to your installation. If you're troubleshooting,
+                    share the configuration structure and error message, but
+                    <strong class="text-white">
+                        never publicly share private keys or other credentials.
+                    </strong>
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- CLIENT -->
+        <section class="bg-white rounded-2xl border border-slate-200
+                        p-7 md:p-9 shadow-sm mb-8">
+
+            <h2 class="text-2xl font-bold text-slate-900 mb-5">
+                📱 Connecting a client
+            </h2>
+
+            <p class="text-slate-600 mb-5">
+                Once the inbound and client are configured, the panel can generally
+                generate a VLESS connection URI or QR code.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-4">
+
+                <div class="border border-slate-200 rounded-xl p-5">
+                    <h3 class="font-bold text-slate-900">Android</h3>
+                    <p class="text-slate-600 mt-1">
+                        Import the generated configuration into a compatible
+                        Xray/VLESS client such as v2rayNG.
+                    </p>
+                </div>
+
+                <div class="border border-slate-200 rounded-xl p-5">
+                    <h3 class="font-bold text-slate-900">iOS</h3>
+                    <p class="text-slate-600 mt-1">
+                        Use a compatible VLESS/Reality client such as V2Box or
+                        another currently maintained client.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- TROUBLESHOOTING -->
+        <section id="troubleshooting" class="bg-white rounded-2xl border border-slate-200
+                                             p-7 md:p-9 shadow-sm mb-8">
+
+            <div class="flex items-center gap-3 mb-5">
+                <span class="bg-indigo-600 text-white w-9 h-9 rounded-full
+                             flex items-center justify-center font-bold">8</span>
+
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900">
+                    Troubleshooting
+                </h2>
+            </div>
+
+            <p class="text-slate-600 mb-6">
+                When something doesn't work, don't randomly change ten settings
+                at once. Find which layer is actually failing.
+            </p>
+
+            <div class="space-y-3">
+
+                <details class="group border border-slate-200 rounded-xl p-5">
+                    <summary class="font-bold cursor-pointer text-slate-900">
+                        ❌ Server is completely unreachable
+                    </summary>
+
+                    <p class="text-slate-600 mt-3">
+                        Check the VPS status, public IP, cloud firewall/security
+                        list and the Linux firewall first.
+                    </p>
+                </details>
+
+
+                <details class="group border border-slate-200 rounded-xl p-5">
+                    <summary class="font-bold cursor-pointer text-slate-900">
+                        ❌ Connection reaches server but doesn't establish
+                    </summary>
+
+                    <p class="text-slate-600 mt-3">
+                        Check the UUID, Reality public key, short ID, SNI,
+                        transport settings and client configuration.
+                    </p>
+                </details>
+
+
+                <details class="group border border-slate-200 rounded-xl p-5">
+                    <summary class="font-bold cursor-pointer text-slate-900">
+                        ❌ It worked and suddenly stopped
+                    </summary>
+
+                    <p class="text-slate-600 mt-3">
+                        Check whether the VPS IP has changed, whether the provider
+                        modified firewall rules, whether the server is running,
+                        and whether the client configuration is still valid.
+                    </p>
+                </details>
+
+
+                <details class="group border border-slate-200 rounded-xl p-5">
+                    <summary class="font-bold cursor-pointer text-slate-900">
+                        ❌ "Reality is not working"
+                    </summary>
+
+                    <p class="text-slate-600 mt-3">
+                        Don't immediately assume Reality itself is broken. Verify
+                        basic TCP connectivity first, then the Xray inbound, then
+                        the Reality parameters, and finally the client.
+                    </p>
+                </details>
+
+            </div>
+
+        </section>
+
+
+        <!-- BIG PICTURE -->
+        <section class="bg-gradient-to-br from-indigo-600 to-violet-700
+                        text-white rounded-3xl p-8 md:p-10 shadow-xl mb-8">
+
+            <h2 class="text-3xl font-black mb-4">
+                The whole thing in one sentence
+            </h2>
+
+            <p class="text-xl text-indigo-100 leading-relaxed">
+                <strong class="text-white">VLESS</strong> is the lightweight
+                proxy protocol,
+                <strong class="text-white">Reality</strong> is the TLS-based
+                anti-censorship layer,
+                and <strong class="text-white">Xray</strong> is the software
+                that ties the pieces together.
+            </p>
+
+            <div class="mt-7 pt-6 border-t border-white/20">
+                <p class="text-indigo-100">
+                    The technology exists largely because ordinary proxy traffic
+                    can be identified and blocked by increasingly sophisticated
+                    network filtering systems. The goal is not "magic invisibility";
+                    the goal is to make classification and active probing more
+                    difficult.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- FINAL DISCLAIMER -->
+        <footer class="text-center text-sm text-slate-500 px-5 pb-8">
+
+            <p class="mb-2">
+                This guide is intended for understanding and configuring
+                infrastructure you own or are authorized to use.
+            </p>
+
+            <p>
+                Network operators can still block IPs, ports, destinations or
+                traffic patterns. No proxy technology guarantees permanent
+                censorship resistance.
+            </p>
+
+            <div class="mt-6 text-slate-400">
+                Made with questionable amounts of troubleshooting. ☕
+            </div>
+
+        </footer>
+
+    </main>
+
+</body>
+</html>
