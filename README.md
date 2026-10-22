@@ -1,3 +1,6 @@
+> **VPN setup guide (VLESS + Reality):** see [docs/vless-reality-setup-guide.html](docs/vless-reality-setup-guide.html) - a saved copy of a third-party guide (source: https://inspiring-sfogliatella-d1daca.netlify.app/, original author unknown) that walks through setting up a VLESS + Reality VPN with 3x-ui on a VPS.
+
+
 [English](/README.md) | [فارسی](/README.fa_IR.md) | [العربية](/README.ar_EG.md) | [中文](/README.zh_CN.md) | [Español](/README.es_ES.md) | [Русский](/README.ru_RU.md) | [Türkçe](/README.tr_TR.md)
 
 <p align="center">
